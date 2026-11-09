@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STUDIO SNAP - Online Digital Photobooth</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Quicksand & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom Color Definitions & Base Utilities -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            snapSoftPink: '#F8DCE8',
+            snapLavender: '#E9DFF5',
+            snapCream: '#FFF4E8',
+            snapBlush: '#F5BFCF',
+            snapLilac: '#CBB9E4',
+            snapPlum: '#57465D',
+            snapGold: '#D4AF37',
+            snapBlushDark: '#E599B2',
+          },
+          fontFamily: {
+            heading: ['Quicksand', 'sans-serif'],
+            body: ['Outfit', 'sans-serif'],
+          },
+          boxShadow: {
+            soft: '0 10px 25px -5px rgba(87, 70, 93, 0.08), 0 8px 10px -6px rgba(87, 70, 93, 0.05)',
+            card: '0 4px 20px rgba(233, 223, 245, 0.5)',
+            glow: '0 0 20px rgba(245, 191, 207, 0.6)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FFF4E8;
+      color: #57465D;
+      font-family: 'Outfit', sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6, .font-heading {
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FFF4E8;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBB9E4;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #F5BFCF;
+    }
+
+    .filter-none { filter: none; }
+    .filter-warm { filter: sepia(0.25) saturate(1.2) contrast(1.05) brightness(1.02); }
+    .filter-bw { filter: grayscale(1) contrast(1.1); }
+    .filter-vintage { filter: sepia(0.4) contrast(0.9) brightness(0.95) hue-rotate(-10deg); }
+    .filter-film { filter: contrast(1.15) saturate(0.85) brightness(1.05) sepia(0.1); }
+    .filter-cinematic { filter: contrast(1.25) saturate(1.2) hue-rotate(-5deg) brightness(0.95); }
+    .filter-glow { filter: brightness(1.1) saturate(1.15) contrast(0.95) blur(0.3px); }
+
+    .sticker-element {
+      user-select: none;
+      touch-action: none;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+    .animate-pulse-glow {
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-snapSoftPink px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" onclick="navigateTo('home')" class="flex items-center gap-2 group">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-snapBlush to-snapLilac flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+          <i class="fa-solid font-bold fa-camera text-lg"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-wider font-heading text-snapPlum block leading-none">STUDIO SNAP</span>
+          <span class="text-[10px] tracking-widest text-snapBlushDark uppercase font-semibold">Memories Forever • SNAP</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2">
+        <button onclick="navigateTo('home')" class="nav-btn px-3 py-1.5 rounded-full text-sm font-medium hover:bg-snapSoftPink/50 transition-colors" data-page="home">Home</button>
+        <button onclick="navigateTo('booth-select')" class="nav-btn px-3 py-1.5 rounded-full text-sm font-medium hover:bg-snapSoftPink/50 transition-colors" data-page="booth-select">Booths</button>
+        <button onclick="navigateTo('custom-studio')" class="nav-btn px-3 py-1.5 rounded-full text-sm font-medium hover:bg-snapSoftPink/50 transition-colors" data-page="custom-studio">Custom Studio</button>
+        <button onclick="navigateTo('frame-shop')" class="nav-btn px-3 py-1.5 rounded-full text-sm font-medium hover:bg-snapSoftPink/50 transition-colors" data-page="frame-shop">Frame Shop</button>
+        <button onclick="navigateTo('stickers-effects')" class="nav-btn px-3 py-1.5 rounded-full text-sm font-medium hover:bg-snapSoftPink/50 transition-colors" data-page="stickers-effects">Effects & Shop</button>
+        <button onclick="navigateTo('gallery')" class="nav-btn px-3 py-1.5 rounded-full text-sm font-medium hover:bg-snapSoftPink/50 transition-colors" data-page="gallery">My Gallery</button>
+      </nav>
+
+      <!-- Right Action Items -->
+      <div class="flex items-center gap-3">
+        <button onclick="navigateTo('snap-plus')" class="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-snapBlush to-snapLilac text-snapPlum text-xs font-bold shadow-sm hover:shadow transition-all">
+          <i class="fa-solid fa-crown text-snapGold"></i>
+          <span>SNAP PLUS</span>
+        </button>
+
+        <button onclick="navigateTo('account')" class="w-9 h-9 rounded-full bg-snapLavender flex items-center justify-center text-snapPlum border border-snapLilac hover:ring-2 hover:ring-snapBlush transition-all">
+          <i class="fa-solid fa-user text-sm"></i>
+        </button>
+
+        <button onclick="toggleMobileMenu()" class="md:hidden text-snapPlum p-2 focus:outline-none">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden mt-3 pt-3 border-t border-snapSoftPink flex flex-col gap-2">
+      <button onclick="navigateTo('home'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-snapSoftPink/40">Home</button>
+      <button onclick="navigateTo('booth-select'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-snapSoftPink/40">Booths (Classic / LDR / Friends)</button>
+      <button onclick="navigateTo('custom-studio'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-snapSoftPink/40">Custom Studio</button>
+      <button onclick="navigateTo('frame-shop'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-snapSoftPink/40">Frame Shop</button>
+      <button onclick="navigateTo('stickers-effects'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-snapSoftPink/40">Effects & Shop</button>
+      <button onclick="navigateTo('gallery'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-snapSoftPink/40">My Gallery</button>
+      <button onclick="navigateTo('snap-plus'); toggleMobileMenu();" class="text-left px-3 py-2 rounded-lg bg-snapSoftPink font-bold text-snapPlum"><i class="fa-solid fa-crown text-snapGold mr-2"></i> Snap Plus</button>
+    </div>
+  </header>
+
+  <!-- ================= NOTIFICATION TOAST ================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-snapPlum text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 pointer-events-none">
+    <i id="toast-icon" class="fa-solid fa-sparkles text-snapBlush"></i>
+    <span id="toast-msg" class="text-sm font-medium">Notification message</span>
+  </div>
+
+  <!-- ================= LDR JOIN ROOM MODAL ================= -->
+  <div id="ldr-modal" class="fixed inset-0 z-50 bg-snapPlum/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6 border border-snapSoftPink">
+      <div class="text-center space-y-2">
+        <div class="w-16 h-16 bg-snapSoftPink rounded-full flex items-center justify-center mx-auto text-snapBlushDark text-2xl">
+          <i class="fa-solid fa-heart-pulse"></i>
+        </div>
+        <h3 class="text-2xl font-bold font-heading text-snapPlum">LDR Couple Session</h3>
+        <p class="text-xs text-snapPlum/70">Connect with your long-distance partner in real-time synchronized capture.</p>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-snapPlum mb-1 uppercase tracking-wider">Your Room Code</label>
+          <div class="flex gap-2">
+            <input type="text" id="modal-room-code" readonly value="#LOVE-992" class="flex-1 px-4 py-2.5 rounded-full bg-snapCream border border-snapSoftPink font-bold text-snapPlum text-sm text-center">
+            <button onclick="copyLdrCode()" class="px-4 py-2.5 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum text-xs font-bold">Copy</button>
+          </div>
+        </div>
+
+        <div class="relative flex py-2 items-center">
+          <div class="flex-grow border-t border-snapSoftPink"></div>
+          <span class="flex-shrink mx-4 text-xs text-snapPlum/50 uppercase">Or join partner room</span>
+          <div class="flex-grow border-t border-snapSoftPink"></div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-snapPlum mb-1 uppercase tracking-wider">Enter Partner Room Code</label>
+          <input type="text" id="partner-join-input" placeholder="#LOVE-XXXX" class="w-full px-4 py-2.5 rounded-full border border-snapSoftPink text-xs text-snapPlum focus:outline-none focus:ring-2 ring-snapBlush text-center font-semibold">
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button onclick="closeLdrModal()" class="flex-1 py-3 rounded-full bg-snapCream hover:bg-snapSoftPink text-snapPlum font-semibold text-xs border border-snapSoftPink">Cancel</button>
+        <button onclick="joinPartnerRoom()" class="flex-1 py-3 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold text-xs shadow">Start LDR Sync</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN CONTENT PAGES ================= -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8">
+
+    <!-- PAGE 1: HOME -->
+    <section id="page-home" class="page-content space-y-12">
+      <div class="relative bg-gradient-to-br from-snapSoftPink via-snapLavender to-snapCream rounded-3xl p-8 md:p-12 shadow-soft overflow-hidden">
+        <div class="absolute -right-12 -bottom-12 w-80 h-80 bg-snapBlush/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-12 -top-12 w-64 h-64 bg-snapLilac/30 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div class="relative z-10 max-w-2xl space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 backdrop-blur border border-snapBlush text-xs font-semibold text-snapPlum">
+            <span class="w-2 h-2 rounded-full bg-snapBlushDark animate-ping"></span>
+            Studio Snap Digital Memories • Memories Forever
+          </div>
+          <h1 class="text-4xl md:text-6xl font-bold font-heading text-snapPlum leading-tight">
+            Your moments. <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-snapBlushDark to-snapLilac">Your frames.</span> Your memories.
+          </h1>
+          <p class="text-lg text-snapPlum/80 leading-relaxed">
+            Capture cute moments individually, with squad friends in Friends Booth, or in synchronized real-time couple sessions with zoom-style custom backgrounds.
+          </p>
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <button onclick="startPhotoboothFlow('classic')" class="px-8 py-3.5 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold text-base shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+              <i class="fa-solid fa-camera"></i> Start Snap Session
+            </button>
+            <button onclick="navigateTo('booth-select')" class="px-6 py-3.5 rounded-full bg-white/80 hover:bg-white text-snapPlum font-semibold text-base shadow-sm hover:shadow transition-all border border-snapLavender">
+              Explore Booth Modes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="flex justify-between items-end">
+          <div>
+            <h2 class="text-2xl font-bold font-heading text-snapPlum">Choose Your Booth Experience</h2>
+            <p class="text-sm text-snapPlum/70">Pick a mode to start creating your photo memory strip</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Classic Booth -->
+          <div onclick="startPhotoboothFlow('classic')" class="group cursor-pointer bg-white p-6 rounded-3xl border border-snapSoftPink hover:border-snapBlush shadow-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-snapSoftPink flex items-center justify-center text-snapPlum text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-user font-bold"></i>
+              </div>
+              <h3 class="text-xl font-bold text-snapPlum font-heading">Classic Booth</h3>
+              <p class="text-sm text-snapPlum/70">Individual or quick group webcam sessions with virtual Zoom-style background blur & custom images.</p>
+            </div>
+            <div class="mt-6 flex items-center text-xs font-bold text-snapBlushDark group-hover:translate-x-1 transition-transform">
+              <span>Start Classic Session</span>
+              <i class="fa-solid fa-arrow-right ml-2"></i>
+            </div>
+          </div>
+
+          <!-- LDR Lovers -->
+          <div onclick="openLdrModal()" class="group cursor-pointer bg-white p-6 rounded-3xl border border-snapSoftPink hover:border-snapBlush shadow-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-3 right-3 bg-snapSoftPink text-snapPlum text-[10px] font-bold px-2 py-0.5 rounded-full">Synchronized</div>
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-snapSoftPink flex items-center justify-center text-snapBlushDark text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <h3 class="text-xl font-bold text-snapPlum font-heading">LDR Lovers</h3>
+              <p class="text-sm text-snapPlum/70">Two-device synchronized couple sessions with room codes for remote partners.</p>
+            </div>
+            <div class="mt-6 flex items-center text-xs font-bold text-snapBlushDark group-hover:translate-x-1 transition-transform">
+              <span>Join LDR Room</span>
+              <i class="fa-solid fa-arrow-right ml-2"></i>
+            </div>
+          </div>
+
+          <!-- Friends Booth -->
+          <div onclick="startPhotoboothFlow('friends')" class="group cursor-pointer bg-white p-6 rounded-3xl border border-snapSoftPink hover:border-snapBlush shadow-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-snapLavender flex items-center justify-center text-snapPlum text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <h3 class="text-xl font-bold text-snapPlum font-heading">Friends Booth</h3>
+              <p class="text-sm text-snapPlum/70">Shared squad experience with squad badge header, party sticker themes & multi-person grids.</p>
+            </div>
+            <div class="mt-6 flex items-center text-xs font-bold text-snapBlushDark group-hover:translate-x-1 transition-transform">
+              <span>Start Squad Session</span>
+              <i class="fa-solid fa-arrow-right ml-2"></i>
+            </div>
+          </div>
+
+          <!-- Custom Studio -->
+          <div onclick="navigateTo('custom-studio')" class="group cursor-pointer bg-white p-6 rounded-3xl border border-snapSoftPink hover:border-snapBlush shadow-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-snapCream flex items-center justify-center text-snapGold text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </div>
+              <h3 class="text-xl font-bold text-snapPlum font-heading">Custom Studio</h3>
+              <p class="text-sm text-snapPlum/70">Full custom freedom layout builder with advanced aspect ratio & canvas design.</p>
+            </div>
+            <div class="mt-6 flex items-center text-xs font-bold text-snapBlushDark group-hover:translate-x-1 transition-transform">
+              <span>Open Custom Studio</span>
+              <i class="fa-solid fa-arrow-right ml-2"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 2: BOOTH SELECTOR -->
+    <section id="page-booth-select" class="page-content hidden space-y-8">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h1 class="text-3xl font-bold font-heading text-snapPlum">Choose Studio Mode</h1>
+        <p class="text-sm text-snapPlum/70">Select your preferred photo studio mode to begin your creation journey.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-3xl p-8 border border-snapSoftPink shadow-card flex flex-col justify-between hover:shadow-xl transition-all">
+          <div class="space-y-6">
+            <div class="w-16 h-16 rounded-2xl bg-snapSoftPink flex items-center justify-center text-snapPlum text-3xl">
+              <i class="fa-solid fa-camera font-bold"></i>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold font-heading text-snapPlum">Classic Photobooth</h2>
+              <p class="text-xs font-semibold text-snapBlushDark uppercase tracking-wider mt-1">Solo & Solo Group</p>
+            </div>
+            <p class="text-sm text-snapPlum/70 leading-relaxed">
+              Standard webcam session with Zoom-style virtual background blur & custom images, countdown, and single photo retakes.
+            </p>
+          </div>
+          <button onclick="startPhotoboothFlow('classic')" class="mt-8 w-full py-3 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold transition-all shadow">
+            Launch Classic Studio
+          </button>
+        </div>
+
+        <div class="bg-white rounded-3xl p-8 border border-snapSoftPink shadow-card flex flex-col justify-between hover:shadow-xl transition-all relative">
+          <div class="absolute top-4 right-4 bg-snapLavender text-snapPlum text-xs font-bold px-3 py-1 rounded-full">
+            Couple Sync
+          </div>
+          <div class="space-y-6">
+            <div class="w-16 h-16 rounded-2xl bg-snapSoftPink flex items-center justify-center text-snapBlushDark text-3xl">
+              <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold font-heading text-snapPlum">LDR Lovers</h2>
+              <p class="text-xs font-semibold text-snapBlushDark uppercase tracking-wider mt-1">Long Distance Couple Studio</p>
+            </div>
+            <p class="text-sm text-snapPlum/70 leading-relaxed">
+              Two-device synchronized session! Enter partner room codes like #LOVE-992 to take side-by-side couple photos.
+            </p>
+          </div>
+          <button onclick="openLdrModal()" class="mt-8 w-full py-3 rounded-full bg-snapLavender hover:bg-snapLilac text-snapPlum font-bold transition-all shadow">
+            Join / Create LDR Room
+          </button>
+        </div>
+
+        <div class="bg-white rounded-3xl p-8 border border-snapSoftPink shadow-card flex flex-col justify-between hover:shadow-xl transition-all">
+          <div class="space-y-6">
+            <div class="w-16 h-16 rounded-2xl bg-snapCream flex items-center justify-center text-snapPlum text-3xl">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold font-heading text-snapPlum">Friends Booth</h2>
+              <p class="text-xs font-semibold text-snapBlushDark uppercase tracking-wider mt-1">Shared Squad Experience</p>
+            </div>
+            <p class="text-sm text-snapPlum/70 leading-relaxed">
+              Special squad session with squad badge headers, party templates, and multi-person grid layouts.
+            </p>
+          </div>
+          <button onclick="startPhotoboothFlow('friends')" class="mt-8 w-full py-3 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold transition-all shadow">
+            Launch Squad Studio
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 3: MAIN PHOTOBOOTH WORKFLOW (STEPS 1-5) -->
+    <section id="page-booth-workflow" class="page-content hidden space-y-6">
+      <div class="bg-white rounded-2xl p-4 border border-snapSoftPink shadow-sm flex items-center justify-between">
+        <button onclick="previousWorkflowStep()" class="text-xs font-bold text-snapPlum/70 hover:text-snapPlum flex items-center gap-1">
+          <i class="fa-solid fa-chevron-left"></i> Back
+        </button>
+        
+        <!-- Step Indicator Pills: Layout -> Capture -> Frame -> Editor -> Export -->
+        <div class="flex items-center gap-2 md:gap-4">
+          <div id="step-pill-1" class="step-pill flex items-center gap-1.5 px-3 py-1 rounded-full bg-snapBlush text-snapPlum text-xs font-bold">
+            <span class="w-4 h-4 rounded-full bg-white text-[10px] flex items-center justify-center">1</span>
+            <span class="hidden sm:inline">Layout</span>
+          </div>
+          <div id="step-pill-2" class="step-pill flex items-center gap-1.5 px-3 py-1 rounded-full bg-snapCream text-snapPlum/60 text-xs font-bold">
+            <span class="w-4 h-4 rounded-full bg-snapSoftPink text-[10px] flex items-center justify-center">2</span>
+            <span class="hidden sm:inline">Capture</span>
+          </div>
+          <div id="step-pill-3" class="step-pill flex items-center gap-1.5 px-3 py-1 rounded-full bg-snapCream text-snapPlum/60 text-xs font-bold">
+            <span class="w-4 h-4 rounded-full bg-snapSoftPink text-[10px] flex items-center justify-center">3</span>
+            <span class="hidden sm:inline">Frame</span>
+          </div>
+          <div id="step-pill-4" class="step-pill flex items-center gap-1.5 px-3 py-1 rounded-full bg-snapCream text-snapPlum/60 text-xs font-bold">
+            <span class="w-4 h-4 rounded-full bg-snapSoftPink text-[10px] flex items-center justify-center">4</span>
+            <span class="hidden sm:inline">Editor</span>
+          </div>
+          <div id="step-pill-5" class="step-pill flex items-center gap-1.5 px-3 py-1 rounded-full bg-snapCream text-snapPlum/60 text-xs font-bold">
+            <span class="w-4 h-4 rounded-full bg-snapSoftPink text-[10px] flex items-center justify-center">5</span>
+            <span class="hidden sm:inline">Export</span>
+          </div>
+        </div>
+
+        <span id="current-booth-label" class="text-xs font-bold text-snapBlushDark uppercase tracking-wider">Classic Booth</span>
+      </div>
+
+      <!-- WORKFLOW STEP 1: SELECT LAYOUT & FORMAT -->
+      <div id="workflow-step-1" class="workflow-step space-y-6">
+        <div class="text-center max-w-lg mx-auto">
+          <h2 class="text-2xl font-bold font-heading text-snapPlum">Select Frame Layout & Format</h2>
+          <p class="text-sm text-snapPlum/70">Choose from polaroids, vertical/horizontal 2x6 strips, and postcards.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div onclick="selectLayout('4-cut', 4, 'strip-vertical')" class="layout-card cursor-pointer bg-white p-6 rounded-3xl border-2 border-snapBlush text-center space-y-4 shadow-md transition-all">
+            <div class="w-16 h-28 mx-auto border-4 border-snapBlush rounded-xl p-1 flex flex-col gap-1 justify-around bg-snapCream">
+              <div class="w-full h-4 bg-snapBlush/60 rounded"></div>
+              <div class="w-full h-4 bg-snapBlush/60 rounded"></div>
+              <div class="w-full h-4 bg-snapBlush/60 rounded"></div>
+              <div class="w-full h-4 bg-snapBlush/60 rounded"></div>
+            </div>
+            <h3 class="font-bold text-snapPlum text-sm">4-Cut Classic Strip</h3>
+            <span class="text-xs text-snapBlushDark font-semibold block">4 Shots • Most Popular</span>
+          </div>
+
+          <div onclick="selectLayout('polaroid', 1, 'polaroid')" class="layout-card cursor-pointer bg-white p-6 rounded-3xl border-2 border-snapSoftPink hover:border-snapBlush text-center space-y-4 shadow-sm hover:shadow-md transition-all">
+            <div class="w-20 h-24 mx-auto border-4 border-snapSoftPink rounded-xl p-2 flex flex-col justify-between bg-white shadow-xs">
+              <div class="w-full h-14 bg-snapCream rounded"></div>
+              <div class="w-12 h-2 bg-snapPlum/20 mx-auto rounded"></div>
+            </div>
+            <h3 class="font-bold text-snapPlum text-sm">Polaroid Frame</h3>
+            <span class="text-xs text-snapPlum/60 block">1 Shot • Instant Film</span>
+          </div>
+
+          <div onclick="selectLayout('2x6-vert', 3, 'strip-vertical-2x6')" class="layout-card cursor-pointer bg-white p-6 rounded-3xl border-2 border-snapSoftPink hover:border-snapBlush text-center space-y-4 shadow-sm hover:shadow-md transition-all">
+            <div class="w-14 h-32 mx-auto border-4 border-snapSoftPink rounded-xl p-1 flex flex-col gap-1 justify-around bg-snapCream">
+              <div class="w-full h-8 bg-snapLavender/60 rounded"></div>
+              <div class="w-full h-8 bg-snapLavender/60 rounded"></div>
+              <div class="w-full h-8 bg-snapLavender/60 rounded"></div>
+            </div>
+            <h3 class="font-bold text-snapPlum text-sm">2x6 Vertical Strip</h3>
+            <span class="text-xs text-snapPlum/60 block">3 Shots • Booth Classic</span>
+          </div>
+
+          <div onclick="selectLayout('4x6-portrait', 4, 'postcard-portrait')" class="layout-card cursor-pointer bg-white p-6 rounded-3xl border-2 border-snapSoftPink hover:border-snapBlush text-center space-y-4 shadow-sm hover:shadow-md transition-all">
+            <div class="w-20 h-28 mx-auto border-4 border-snapSoftPink rounded-xl p-1 grid grid-cols-2 gap-1 bg-snapCream">
+              <div class="bg-snapSoftPink rounded"></div>
+              <div class="bg-snapSoftPink rounded"></div>
+              <div class="bg-snapSoftPink rounded"></div>
+              <div class="bg-snapSoftPink rounded"></div>
+            </div>
+            <h3 class="font-bold text-snapPlum text-sm">4x6 Postcard</h3>
+            <span class="text-xs text-snapPlum/60 block">4 Shots • Postcard Grid</span>
+          </div>
+        </div>
+
+        <div class="flex justify-center pt-4">
+          <button onclick="goToWorkflowStep(2)" class="px-8 py-3 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold shadow transition-all">
+            Continue to Camera Capture &rarr;
+          </button>
+        </div>
+      </div>
+
+      <!-- WORKFLOW STEP 2: CAMERA CAPTURE WITH ZOOM-STYLE BACKGROUNDS -->
+      <div id="workflow-step-2" class="workflow-step hidden space-y-6">
+        <div class="text-center max-w-lg mx-auto">
+          <h2 class="text-2xl font-bold font-heading text-snapPlum">Camera Capture & Zoom-Style Backgrounds</h2>
+          <p class="text-sm text-snapPlum/70">Choose default backgrounds or upload a custom image from your device.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          
+          <!-- Webcam Main Viewport -->
+          <div class="lg:col-span-2 bg-white rounded-3xl p-6 border border-snapSoftPink shadow-card flex flex-col items-center space-y-4">
+            
+            <!-- Viewport Box with Background Image / Blur & Live Processing Canvas -->
+            <div id="webcam-viewport-box" class="relative w-full aspect-video bg-snapPlum rounded-2xl overflow-hidden flex items-center justify-center shadow-inner">
+              <video id="webcam-video" autoplay playsinline muted class="hidden"></video>
+              <canvas id="webcam-live-canvas" class="w-full h-full object-cover transform -scale-x-100 z-10"></canvas>
+              
+              <div id="countdown-overlay" class="absolute inset-0 z-30 bg-snapPlum/40 backdrop-blur-xs flex items-center justify-center text-white text-7xl font-bold font-heading hidden">
+                <span id="countdown-number" class="animate-ping">3</span>
+              </div>
+
+              <div id="session-mode-badge" class="absolute top-4 left-4 z-20 bg-snapPlum/80 backdrop-blur px-3 py-1.5 rounded-full text-white text-xs font-semibold flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+                <span id="session-mode-text">Classic Studio Session</span>
+              </div>
+            </div>
+
+            <!-- Controls & Zoom Style BG Options -->
+            <div class="w-full space-y-4 pt-2">
+              <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                  <label class="text-xs font-bold text-snapPlum">Timer:</label>
+                  <select id="timer-select" class="px-3 py-1.5 rounded-full bg-snapCream border border-snapSoftPink text-xs font-semibold text-snapPlum focus:outline-none">
+                    <option value="3">3 Seconds</option>
+                    <option value="5" selected>5 Seconds</option>
+                    <option value="10">10 Seconds</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <button id="btn-camera-toggle" onclick="toggleCameraAccess()" class="px-4 py-2 rounded-full bg-snapLavender hover:bg-snapLilac text-snapPlum text-xs font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-video"></i> Start Camera
+                  </button>
+                  <button id="btn-snap-photo" onclick="startCaptureSequence()" class="px-6 py-2.5 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold text-sm shadow-md flex items-center gap-2 transform active:scale-95 transition-all">
+                    <i class="fa-solid fa-camera-retro"></i> Snap Photos
+                  </button>
+                </div>
+              </div>
+
+              <!-- Zoom-Style Background Picker -->
+              <div class="p-3 bg-snapCream rounded-2xl border border-snapSoftPink space-y-2">
+                <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum">Zoom-Style Virtual Backgrounds</label>
+                <div class="flex flex-wrap items-center gap-3">
+                  <button onclick="setZoomBackground('none', '')" class="px-3 py-1.5 rounded-xl bg-white border border-snapSoftPink text-xs font-semibold text-snapPlum hover:border-snapBlush">None</button>
+                  <button onclick="setZoomBackground('blur', '')" class="px-3 py-1.5 rounded-xl bg-white border border-snapSoftPink text-xs font-semibold text-snapPlum hover:border-snapBlush">Blur ☁️</button>
+                  <button onclick="setZoomBackground('preset', 'https://placehold.co/1200x800/F8DCE8/57465D?text=Seoul+Café+Background')" class="px-3 py-1.5 rounded-xl bg-white border border-snapSoftPink text-xs font-semibold text-snapPlum hover:border-snapBlush">Café ☕</button>
+                  <button onclick="setZoomBackground('preset', 'https://placehold.co/1200x800/E9DFF5/57465D?text=Cherry+Blossom+Park')" class="px-3 py-1.5 rounded-xl bg-white border border-snapSoftPink text-xs font-semibold text-snapPlum hover:border-snapBlush">Blossom 🌸</button>
+                  <button onclick="setZoomBackground('preset', 'https://placehold.co/1200x800/FFF4E8/57465D?text=Cozy+Studio+Wall')" class="px-3 py-1.5 rounded-xl bg-white border border-snapSoftPink text-xs font-semibold text-snapPlum hover:border-snapBlush">Studio 🧸</button>
+                  
+                  <label class="px-3 py-1.5 rounded-xl bg-snapBlush hover:bg-snapBlushDark text-snapPlum text-xs font-bold cursor-pointer shadow-xs">
+                    <i class="fa-solid fa-upload mr-1"></i> Custom BG
+                    <input type="file" accept="image/*" onchange="handleCustomBackgroundUpload(event)" class="hidden">
+                  </label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Captured Slots Panel -->
+          <div class="bg-white rounded-3xl p-6 border border-snapSoftPink shadow-card space-y-4">
+            <h3 class="text-base font-bold font-heading text-snapPlum flex justify-between items-center">
+              <span>Captured Shots</span>
+              <span id="captured-count-badge" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-snapSoftPink text-snapPlum">0 / 4</span>
+            </h3>
+
+            <div id="captured-thumbnails-list" class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+              <!-- Dynamically Populated Thumbnails -->
+            </div>
+
+            <button id="btn-proceed-to-frame" onclick="goToWorkflowStep(3)" disabled class="w-full py-3 rounded-full bg-gray-200 text-gray-400 font-bold text-sm transition-all cursor-not-allowed">
+              Choose Frame &rarr;
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- WORKFLOW STEP 3: CHOOSE FRAME & PALETTES -->
+      <div id="workflow-step-3" class="workflow-step hidden space-y-6">
+        <div class="text-center max-w-lg mx-auto">
+          <h2 class="text-2xl font-bold font-heading text-snapPlum">Choose Frame Style & Palette</h2>
+          <p class="text-sm text-snapPlum/70">Select from classic, aesthetic, or event & party themes.</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="bg-white p-6 rounded-3xl border border-snapSoftPink shadow-sm space-y-6 max-h-[460px] overflow-y-auto pr-2">
+            
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum mb-3">Classic & Aesthetic Styles</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button onclick="setFrameTheme('polaroid', '#FFFFFF', '#1A1A1A', 'frame-border-white')" class="p-2.5 rounded-xl bg-white border-2 border-gray-200 text-xs font-bold text-snapPlum text-left">📸 Polaroid Film</button>
+                <button onclick="setFrameTheme('minimal', '#F8DCE8', '#57465D', 'frame-border-pink')" class="p-2.5 rounded-xl bg-[#F8DCE8] border-2 border-snapBlush text-xs font-bold text-snapPlum text-left">✨ Minimalist Strip</button>
+                <button onclick="setFrameTheme('kpop', '#E9DFF5', '#57465D', 'frame-border-lavender')" class="p-2.5 rounded-xl bg-[#E9DFF5] border-2 border-snapLilac text-xs font-bold text-snapPlum text-left">💜 K-Pop Idol Frame</button>
+                <button onclick="setFrameTheme('y2k', '#1A1A1A', '#F5BFCF', 'frame-border-black')" class="p-2.5 rounded-xl bg-[#1A1A1A] border-2 border-gray-800 text-xs font-bold text-snapBlush text-left">⚡ Y2K Cyber Glow</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum mb-3">Event & Party Themes</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button onclick="setFrameTheme('floral', '#FFF4E8', '#57465D', 'frame-border-cream')" class="p-2.5 rounded-xl bg-[#FFF4E8] border-2 border-snapSoftPink text-xs font-bold text-snapPlum text-left">🌷 Floral & Garden</button>
+                <button onclick="setFrameTheme('wooden', '#E6D5C3', '#3D3035', 'frame-border-plum')" class="p-2.5 rounded-xl bg-[#E6D5C3] border-2 border-amber-800 text-xs font-bold text-amber-900 text-left">🪵 Rustic Wooden</button>
+                <button onclick="setFrameTheme('chalkboard', '#2D3748', '#FFFFFF', 'frame-border-black')" class="p-2.5 rounded-xl bg-[#2D3748] border-2 border-gray-700 text-xs font-bold text-white text-left">🖤 Chalkboard Theme</button>
+                <button onclick="setFrameTheme('glamour', '#3D1C3C', '#D4AF37', 'frame-border-plum')" class="p-2.5 rounded-xl bg-[#3D1C3C] border-2 border-snapGold text-xs font-bold text-snapGold text-left">✨ Glamour Sequined</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum mb-2">Frame Header Title</label>
+              <input type="text" id="frame-text-input" oninput="updateFrameHeader(this.value)" value="MEMORIES FOREVER" class="w-full px-4 py-2 rounded-full border border-snapSoftPink focus:outline-none focus:ring-2 ring-snapBlush text-sm text-snapPlum font-semibold" placeholder="Custom text header...">
+            </div>
+          </div>
+
+          <div class="flex justify-center">
+            <div id="frame-live-preview" class="w-52 bg-white border-8 border-gray-200 rounded-3xl p-3 shadow-card flex flex-col items-center gap-2">
+              <div class="w-full text-center text-[11px] font-bold tracking-widest text-snapPlum border-b border-black/10 pb-1 flex items-center justify-center gap-1">
+                <span>✨</span>
+                <span id="preview-frame-header">MEMORIES FOREVER</span>
+                <span>✨</span>
+              </div>
+              <div id="preview-slots-container" class="w-full flex flex-col gap-1.5 py-1">
+                <!-- Dynamically updated slots -->
+              </div>
+              <div id="preview-footer-tag" class="text-[9px] text-snapPlum/70 font-bold tracking-tight text-center">
+                STUDIO SNAP • DIGITAL MEMORIES
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center gap-4 pt-4">
+          <button onclick="goToWorkflowStep(2)" class="px-6 py-3 rounded-full bg-white hover:bg-snapCream text-snapPlum font-semibold border border-snapLavender">
+            Back
+          </button>
+          <button onclick="goToWorkflowStep(4)" class="px-8 py-3 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold shadow transition-all">
+            Continue to Editor &rarr;
+          </button>
+        </div>
+      </div>
+
+      <!-- WORKFLOW STEP 4: PHOTO EDITOR (IPHONE EMOJIS & INDIVIDUAL DELETION) -->
+      <div id="workflow-step-4" class="workflow-step hidden space-y-6">
+        <div class="text-center max-w-lg mx-auto">
+          <h2 class="text-2xl font-bold font-heading text-snapPlum">Creative Studio Editor</h2>
+          <p class="text-sm text-snapPlum/70">Add Apple/iPhone style 3D emojis, filters, text, and manage layers individually.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <div class="lg:col-span-4 bg-white p-5 rounded-3xl border border-snapSoftPink shadow-card space-y-6">
+            <div class="flex border-b border-snapSoftPink">
+              <button onclick="switchEditorTab('filters')" id="tab-btn-filters" class="editor-tab-btn flex-1 py-2 text-xs font-bold text-snapBlushDark border-b-2 border-snapBlushDark">Filters</button>
+              <button onclick="switchEditorTab('stickers')" id="tab-btn-stickers" class="editor-tab-btn flex-1 py-2 text-xs font-bold text-snapPlum/60 hover:text-snapPlum">3D Emojis</button>
+              <button onclick="switchEditorTab('text')" id="tab-btn-text" class="editor-tab-btn flex-1 py-2 text-xs font-bold text-snapPlum/60 hover:text-snapPlum">Text</button>
+              <button onclick="switchEditorTab('layers')" id="tab-btn-layers" class="editor-tab-btn flex-1 py-2 text-xs font-bold text-snapPlum/60 hover:text-snapPlum">Layers</button>
+            </div>
+
+            <!-- Filters -->
+            <div id="tab-content-filters" class="editor-tab-content space-y-4">
+              <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum">Preset Photo Filters</label>
+              <div class="grid grid-cols-3 gap-2">
+                <button onclick="applyPhotoFilter('none')" class="p-2 rounded-xl border border-snapSoftPink bg-snapCream text-center hover:border-snapBlush"><span class="text-xs font-semibold block text-snapPlum">Original</span></button>
+                <button onclick="applyPhotoFilter('warm')" class="p-2 rounded-xl border border-snapSoftPink bg-snapCream text-center hover:border-snapBlush"><span class="text-xs font-semibold block text-snapPlum">Soft Warm</span></button>
+                <button onclick="applyPhotoFilter('bw')" class="p-2 rounded-xl border border-snapSoftPink bg-snapCream text-center hover:border-snapBlush"><span class="text-xs font-semibold block text-snapPlum">Mono B&W</span></button>
+                <button onclick="applyPhotoFilter('vintage')" class="p-2 rounded-xl border border-snapSoftPink bg-snapCream text-center hover:border-snapBlush"><span class="text-xs font-semibold block text-snapPlum">Vintage</span></button>
+                <button onclick="applyPhotoFilter('film')" class="p-2 rounded-xl border border-snapSoftPink bg-snapCream text-center hover:border-snapBlush"><span class="text-xs font-semibold block text-snapPlum">Korean Film</span></button>
+                <button onclick="applyPhotoFilter('cinematic')" class="p-2 rounded-xl border border-snapSoftPink bg-snapCream text-center hover:border-snapBlush"><span class="text-xs font-semibold block text-snapPlum">Cinematic</span></button>
+              </div>
+            </div>
+
+            <!-- Apple/iPhone Style 3D Emojis -->
+            <div id="tab-content-stickers" class="editor-tab-content hidden space-y-4">
+              <div class="flex justify-between items-center">
+                <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum">Apple Style 3D Emojis</label>
+                <span class="text-[10px] text-snapPlum/60">Click to add</span>
+              </div>
+              <div class="grid grid-cols-4 gap-3 text-3xl text-center">
+                <button onclick="addStickerToCanvas('💖')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">💖</button>
+                <button onclick="addStickerToCanvas('🎀')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">🎀</button>
+                <button onclick="addStickerToCanvas('✨')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">✨</button>
+                <button onclick="addStickerToCanvas('🧸')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">🧸</button>
+                <button onclick="addStickerToCanvas('🍓')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">🍓</button>
+                <button onclick="addStickerToCanvas('👑')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">👑</button>
+                <button onclick="addStickerToCanvas('🌷')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">🌷</button>
+                <button onclick="addStickerToCanvas('🎂')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">🎂</button>
+                <button onclick="addStickerToCanvas('🔥')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">🔥</button>
+                <button onclick="addStickerToCanvas('⭐')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">⭐</button>
+                <button onclick="addStickerToCanvas('🦋')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">🦋</button>
+                <button onclick="addStickerToCanvas('🍒')" class="p-3 bg-snapCream hover:bg-snapSoftPink rounded-2xl border border-snapSoftPink shadow-xs transform hover:scale-110 transition-transform font-apple">🍒</button>
+              </div>
+            </div>
+
+            <!-- Custom Text -->
+            <div id="tab-content-text" class="editor-tab-content hidden space-y-4">
+              <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum">Add Text Overlay</label>
+              <div class="flex gap-2">
+                <input type="text" id="canvas-text-input" placeholder="Type text..." class="flex-1 px-3 py-2 border border-snapSoftPink rounded-full text-xs text-snapPlum focus:outline-none">
+                <button onclick="addTextToCanvas()" class="px-4 py-2 bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold text-xs rounded-full">Add</button>
+              </div>
+            </div>
+
+            <!-- Individual Layer Deletion -->
+            <div id="tab-content-layers" class="editor-tab-content hidden space-y-4">
+              <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum">Active Overlays (Clear Individually)</label>
+              <div id="layers-list-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                <!-- Dynamically populated layer items -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Preview Area -->
+          <div class="lg:col-span-8 flex flex-col items-center justify-center bg-white p-6 rounded-3xl border border-snapSoftPink shadow-card space-y-6">
+            <div class="text-xs font-semibold text-snapPlum/60 flex items-center gap-2">
+              <i class="fa-solid fa-hand-pointer"></i> Drag 3D emojis & stickers to reposition
+            </div>
+
+            <div id="editor-strip-wrapper" class="relative bg-white border-8 border-snapSoftPink rounded-[32px] p-4 shadow-xl max-w-xs w-full overflow-hidden">
+              <div id="editor-header-stamp" class="text-center text-xs font-bold tracking-widest text-snapPlum mb-2 uppercase">
+                MEMORIES FOREVER
+              </div>
+
+              <div id="editor-photo-stack" class="flex flex-col gap-2.5 relative rounded-2xl overflow-hidden">
+                <!-- Dynamically populated photo stack -->
+              </div>
+
+              <div id="interactive-sticker-layer" class="absolute inset-0 pointer-events-auto overflow-hidden rounded-3xl">
+                <!-- Draggable stickers -->
+              </div>
+
+              <div id="editor-footer-tag" class="text-center text-[9px] font-bold tracking-widest text-snapPlum/60 mt-3 uppercase">
+                STUDIO SNAP • DIGITAL MEMORIES
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <button onclick="goToWorkflowStep(3)" class="px-6 py-2.5 rounded-full bg-white hover:bg-snapCream text-snapPlum font-semibold border border-snapLavender text-xs">
+                Back to Frame
+              </button>
+              <button onclick="goToWorkflowStep(5); renderFinalExportStrip();" class="px-8 py-2.5 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold text-sm shadow">
+                Finish & Export &rarr;
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- WORKFLOW STEP 5: EXPORT & SAVE -->
+      <div id="workflow-step-5" class="workflow-step hidden space-y-6">
+        <div class="text-center max-w-lg mx-auto">
+          <h2 class="text-2xl font-bold font-heading text-snapPlum">Your Photo Memory is Ready!</h2>
+          <p class="text-sm text-snapPlum/70">Download your rounded cute strip or save it directly to your My Gallery cloud.</p>
+        </div>
+
+        <div class="max-w-md mx-auto bg-white p-8 rounded-3xl border border-snapSoftPink shadow-xl text-center space-y-6">
+          <div class="flex justify-center">
+            <canvas id="final-export-canvas" class="max-w-[240px] w-full rounded-3xl shadow-md border-4 border-snapSoftPink"></canvas>
+          </div>
+
+          <div class="space-y-3">
+            <button onclick="downloadStripImage()" class="w-full py-3.5 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-transform transform active:scale-95">
+              <i class="fa-solid fa-download"></i> Download Rounded High-Res PNG
+            </button>
+
+            <button onclick="saveToMyGallery()" class="w-full py-3 rounded-full bg-snapLavender hover:bg-snapLilac text-snapPlum font-bold text-xs flex items-center justify-center gap-2">
+              <i class="fa-solid fa-bookmark"></i> Save to My Gallery
+            </button>
+
+            <button onclick="copyShareableLink()" class="w-full py-2.5 rounded-full bg-white hover:bg-snapCream text-snapPlum border border-snapSoftPink font-semibold text-xs flex items-center justify-center gap-2">
+              <i class="fa-solid fa-link"></i> Copy Photo Link
+            </button>
+          </div>
+
+          <div class="pt-4 border-t border-snapSoftPink">
+            <button onclick="resetPhotoboothFlow()" class="text-xs font-bold text-snapBlushDark hover:underline">
+              Start a New Session &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PAGE 4: CUSTOM STUDIO -->
+    <section id="page-custom-studio" class="page-content hidden space-y-8">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h1 class="text-3xl font-bold font-heading text-snapPlum">Custom Layout Studio</h1>
+        <p class="text-sm text-snapPlum/70">Design unique non-standard collage layouts with customized canvas aspect ratios.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-snapSoftPink shadow-card max-w-4xl mx-auto space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-4">
+            <label class="block text-xs font-bold uppercase tracking-wider text-snapPlum">Select Canvas Ratio</label>
+            <select id="custom-ratio-select" class="w-full px-4 py-2.5 rounded-full border border-snapSoftPink text-xs font-semibold text-snapPlum bg-snapCream">
+              <option value="vertical-strip">Vertical Strip (1:3)</option>
+              <option value="square">Square Grid (1:1)</option>
+              <option value="polaroid">Polaroid Frame Ratio</option>
+              <option value="widescreen">Widescreen Postcard (16:9)</option>
+              <option value="portrait-4x6">4x6 Portrait Postcard</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-2 flex flex-col items-center justify-center border-2 border-dashed border-snapLilac rounded-2xl p-8 bg-snapCream/50 text-center space-y-3">
+            <i class="fa-solid fa-shapes text-4xl text-snapLilac"></i>
+            <h3 class="font-bold text-snapPlum">Custom Ratio Sandbox</h3>
+            <p class="text-xs text-snapPlum/70">Launch photobooth session configured precisely to your chosen aspect ratio.</p>
+            <button onclick="launchCustomRatioStudio()" class="px-6 py-2.5 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum text-xs font-bold shadow">
+              Launch Custom Ratio Session
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 5: FRAME SHOP -->
+    <section id="page-frame-shop" class="page-content hidden space-y-8">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h1 class="text-3xl font-bold font-heading text-snapPlum">Frame Shop</h1>
+        <p class="text-sm text-snapPlum/70">Explore free and premium designer frames for your photo sessions.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-3xl border border-snapSoftPink shadow-card space-y-4">
+          <div class="w-full h-48 bg-snapSoftPink rounded-2xl flex items-center justify-center p-4">
+            <div class="w-20 h-36 bg-white rounded-xl shadow border-2 border-snapBlush"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-snapPlum">Cherry Blossom Strip</h3>
+            <span class="text-xs bg-green-100 text-green-700 font-bold px-2.5 py-0.5 rounded-full">FREE</span>
+          </div>
+          <button onclick="showToast('Frame equipped for your next session!')" class="w-full py-2 rounded-full bg-snapCream hover:bg-snapSoftPink text-snapPlum text-xs font-bold border border-snapSoftPink">Equip Frame</button>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-snapSoftPink shadow-card space-y-4">
+          <div class="w-full h-48 bg-snapLavender rounded-2xl flex items-center justify-center p-4">
+            <div class="w-20 h-36 bg-white rounded-xl shadow border-2 border-snapLilac"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-snapPlum">Lavender Dream 2x6</h3>
+            <span class="text-xs bg-green-100 text-green-700 font-bold px-2.5 py-0.5 rounded-full">FREE</span>
+          </div>
+          <button onclick="showToast('Frame equipped for your next session!')" class="w-full py-2 rounded-full bg-snapCream hover:bg-snapSoftPink text-snapPlum text-xs font-bold border border-snapSoftPink">Equip Frame</button>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-snapSoftPink shadow-card space-y-4 relative">
+          <div class="absolute top-8 right-8 bg-snapPlum text-snapGold text-[10px] font-bold px-2 py-0.5 rounded-full">PLUS</div>
+          <div class="w-full h-48 bg-gradient-to-tr from-snapPlum to-purple-900 rounded-2xl flex items-center justify-center p-4">
+            <div class="w-20 h-36 bg-white rounded-xl shadow border-2 border-snapGold"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-snapPlum">Korean Y2K Hologram</h3>
+            <span class="text-xs font-bold text-snapGold">PLUS EXCLUSIVE</span>
+          </div>
+          <button onclick="navigateTo('snap-plus')" class="w-full py-2 rounded-full bg-gradient-to-r from-snapBlush to-snapLilac text-snapPlum text-xs font-bold">Unlock with Snap Plus</button>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-snapSoftPink shadow-card space-y-4 relative">
+          <div class="absolute top-8 right-8 bg-snapPlum text-snapGold text-[10px] font-bold px-2 py-0.5 rounded-full">PLUS</div>
+          <div class="w-full h-48 bg-amber-100 rounded-2xl flex items-center justify-center p-4">
+            <div class="w-20 h-36 bg-white rounded-xl shadow border-2 border-amber-400"></div>
+          </div>
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-snapPlum">Vintage Postcard 4x6</h3>
+            <span class="text-xs font-bold text-snapGold">PLUS EXCLUSIVE</span>
+          </div>
+          <button onclick="navigateTo('snap-plus')" class="w-full py-2 rounded-full bg-gradient-to-r from-snapBlush to-snapLilac text-snapPlum text-xs font-bold">Unlock with Snap Plus</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 6: STICKERS & EFFECTS SHOPPING LIBRARY -->
+    <section id="page-stickers-effects" class="page-content hidden space-y-8">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h1 class="text-3xl font-bold font-heading text-snapPlum">Stickers & Effects Library</h1>
+        <p class="text-sm text-snapPlum/70">Browse 3D emojis, cute frames, and zoom-style background blur effects in our shopping library.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div class="bg-white p-6 rounded-3xl border border-snapSoftPink shadow-card space-y-4">
+          <div class="w-full h-36 bg-snapSoftPink rounded-2xl flex items-center justify-center text-4xl">💖🧸🍓🎀</div>
+          <h3 class="font-bold text-snapPlum">Apple 3D Emoji Pack</h3>
+          <p class="text-xs text-snapPlum/70">Glossy, attractive 3D emojis for your photobooth strips.</p>
+          <span class="text-xs font-bold text-green-600 block">UNLOCKED (FREE)</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-snapSoftPink shadow-card space-y-4">
+          <div class="w-full h-36 bg-snapLavender rounded-2xl flex items-center justify-center text-4xl">☕🌸☁️</div>
+          <h3 class="font-bold text-snapPlum">Zoom Virtual Backgrounds</h3>
+          <p class="text-xs text-snapPlum/70">Café, cherry blossom, and blur background presets.</p>
+          <span class="text-xs font-bold text-green-600 block">UNLOCKED (FREE)</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-snapSoftPink shadow-card space-y-4 relative">
+          <div class="absolute top-4 right-4 bg-snapPlum text-snapGold text-[10px] font-bold px-2 py-0.5 rounded-full">PLUS</div>
+          <div class="w-full h-36 bg-gradient-to-tr from-snapPlum to-purple-800 rounded-2xl flex items-center justify-center text-4xl text-white">✨👑💎</div>
+          <h3 class="font-bold text-snapPlum">Exclusive K-Idol Pack</h3>
+          <p class="text-xs text-snapPlum/70">Premium holographic stickers and cinematic filters.</p>
+          <button onclick="navigateTo('snap-plus')" class="w-full py-2 rounded-full bg-gradient-to-r from-snapBlush to-snapLilac text-snapPlum text-xs font-bold">Unlock Plus</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 7: MY GALLERY -->
+    <section id="page-gallery" class="page-content hidden space-y-8">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold font-heading text-snapPlum">My Photo Gallery</h1>
+          <p class="text-sm text-snapPlum/70">Your saved photo sessions and photobooth strips.</p>
+        </div>
+        <button onclick="startPhotoboothFlow('classic')" class="px-5 py-2.5 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold text-xs shadow">
+          + New Snap Session
+        </button>
+      </div>
+
+      <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div id="empty-gallery-msg" class="col-span-full text-center py-12 bg-white rounded-3xl border border-snapSoftPink p-8 space-y-4">
+          <i class="fa-solid fa-images text-4xl text-snapLilac"></i>
+          <h3 class="text-lg font-bold text-snapPlum">No Saved Sessions Yet</h3>
+          <p class="text-xs text-snapPlum/70">Take photos in the booth and click "Save to My Gallery" to see them here.</p>
+          <button onclick="startPhotoboothFlow('classic')" class="px-6 py-2 rounded-full bg-snapBlush text-snapPlum font-bold text-xs">Start First Session</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 8: SNAP PLUS MEMBERSHIP -->
+    <section id="page-snap-plus" class="page-content hidden space-y-8 max-w-4xl mx-auto">
+      <div class="text-center space-y-3">
+        <span class="px-4 py-1 rounded-full bg-snapBlush text-snapPlum text-xs font-bold inline-block">PREMIUM MEMBERSHIP</span>
+        <h1 class="text-4xl font-bold font-heading text-snapPlum">Elevate Your Memories with Snap Plus</h1>
+        <p class="text-sm text-snapPlum/70 max-w-lg mx-auto">Unlock all designer frames, unlimited cloud photo gallery storage, and background blur effects.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+        <div class="bg-white p-8 rounded-3xl border border-snapSoftPink shadow-card space-y-6">
+          <div>
+            <h3 class="text-xl font-bold font-heading text-snapPlum">Free Starter</h3>
+            <p class="text-xs text-snapPlum/70">Essential photobooth features</p>
+            <div class="text-3xl font-bold font-heading text-snapPlum mt-4">$0 <span class="text-xs text-snapPlum/60 font-normal">/ forever</span></div>
+          </div>
+          <button onclick="showToast('You are currently on the Free Starter plan')" class="w-full py-3 rounded-full bg-snapCream text-snapPlum font-bold text-xs border border-snapSoftPink">Current Plan</button>
+        </div>
+
+        <div class="bg-gradient-to-b from-white to-snapSoftPink/40 p-8 rounded-3xl border-2 border-snapBlush shadow-xl space-y-6 relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-gradient-to-r from-snapBlushDark to-snapLilac text-white text-[10px] font-bold px-3 py-1 rounded-full">POPULAR</div>
+          <div>
+            <h3 class="text-xl font-bold font-heading text-snapPlum flex items-center gap-2">
+              Snap Plus <i class="fa-solid fa-crown text-snapGold"></i>
+            </h3>
+            <p class="text-xs text-snapPlum/70">Full creative studio access</p>
+            <div class="text-3xl font-bold font-heading text-snapPlum mt-4">$4.99 <span class="text-xs text-snapPlum/60 font-normal">/ month</span></div>
+          </div>
+          <button onclick="upgradeToSnapPlus()" class="w-full py-3.5 rounded-full bg-gradient-to-r from-snapBlushDark to-snapLilac text-white font-bold text-sm shadow-md">
+            Upgrade to Snap Plus
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 9: MY ACCOUNT -->
+    <section id="page-account" class="page-content hidden space-y-8 max-w-2xl mx-auto">
+      <div class="text-center space-y-2">
+        <h1 class="text-3xl font-bold font-heading text-snapPlum">My Account</h1>
+        <p class="text-sm text-snapPlum/70">Manage your profile, preferences, and saved preferences.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-snapSoftPink shadow-card space-y-6">
+        <div class="flex items-center gap-4 border-b border-snapSoftPink pb-6">
+          <div class="w-16 h-16 rounded-full bg-snapLavender flex items-center justify-center text-snapPlum text-2xl font-bold border-2 border-snapLilac">
+            JS
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-snapPlum font-heading">Jennie Studio</h3>
+            <p class="text-xs text-snapPlum/70">jennie@studiosnap.app</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white border-t border-snapSoftPink py-6 px-4 mt-12 text-center text-xs text-snapPlum/60">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 font-heading font-bold text-snapPlum">
+        <i class="fa-solid fa-camera text-snapBlushDark"></i> STUDIO SNAP
+      </div>
+      <div>
+        STUDIO SNAP • Digital Memories / Memories Forever &copy; 2026. All rights reserved.
+      </div>
+      <div class="flex gap-4">
+        <a href="#" onclick="navigateTo('home'); return false;" class="hover:underline">Home</a>
+        <a href="#" onclick="navigateTo('frame-shop'); return false;" class="hover:underline">Frames</a>
+        <a href="#" onclick="navigateTo('snap-plus'); return false;" class="hover:underline">Snap Plus</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    const state = {
+      currentPage: 'home',
+      currentBoothMode: 'classic',
+      currentStep: 1,
+      selectedLayout: '4-cut',
+      requiredShotsCount: 4,
+      layoutFormat: 'strip-vertical',
+      frameColor: '#F8DCE8',
+      frameTextColor: '#57465D',
+      frameBorderClass: 'frame-border-pink',
+      frameHeader: 'MEMORIES FOREVER',
+      footerTagline: 'STUDIO SNAP • DIGITAL MEMORIES',
+      zoomBgType: 'none', // none, blur, preset, custom
+      zoomBgValue: '',
+      cameraStream: null,
+      capturedPhotos: [],
+      activeFilter: 'none',
+      stickersOnCanvas: [],
+      galleryItems: [],
+      isSnapPlus: false,
+      ldrRoomCode: '#LOVE-992'
+    };
+
+    function navigateTo(pageId) {
+      state.currentPage = pageId;
+      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+      const targetPage = document.getElementById(`page-${pageId}`);
+      if (targetPage) targetPage.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.getAttribute('data-page') === pageId) {
+          btn.classList.add('bg-snapSoftPink', 'font-bold');
+        } else {
+          btn.classList.remove('bg-snapSoftPink', 'font-bold');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+
+    function showToast(message, icon = 'fa-sparkles') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.textContent = message;
+      toastIcon.className = `fa-solid ${icon} text-snapBlush`;
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    function openLdrModal() {
+      document.getElementById('ldr-modal').classList.remove('hidden');
+    }
+
+    function closeLdrModal() {
+      document.getElementById('ldr-modal').classList.add('hidden');
+    }
+
+    function copyLdrCode() {
+      showToast('LDR Room code copied to clipboard!');
+    }
+
+    function joinPartnerRoom() {
+      const codeInput = document.getElementById('partner-join-input').value.trim();
+      if (!codeInput) {
+        showToast('Please enter a valid partner room code');
+        return;
+      }
+      closeLdrModal();
+      showToast(`Successfully connected to partner room: ${codeInput}!`, 'fa-heart');
+      startPhotoboothFlow('ldr');
+    }
+
+    function startPhotoboothFlow(mode = 'classic') {
+      state.currentBoothMode = mode;
+      state.capturedPhotos = [];
+      state.stickersOnCanvas = [];
+      
+      const label = document.getElementById('current-booth-label');
+      const modeText = document.getElementById('session-mode-text');
+
+      if (mode === 'classic') {
+        label.textContent = 'Classic Booth';
+        modeText.textContent = 'Classic Studio Session';
+      } else if (mode === 'ldr') {
+        label.textContent = 'LDR Couple Sync';
+        modeText.textContent = 'LDR Synced Room: #LOVE-992 💖';
+      } else if (mode === 'friends') {
+        label.textContent = 'Friends Squad Booth';
+        modeText.textContent = '🌸 Friends Squad Experience 🌸';
+        state.frameHeader = 'SQUAD VIBES';
+        state.footerTagline = 'SNAP • SQUAD SQUAD';
+      }
+
+      navigateTo('booth-workflow');
+      goToWorkflowStep(1);
+    }
+
+    function launchCustomRatioStudio() {
+      const ratio = document.getElementById('custom-ratio-select').value;
+      if (ratio === 'polaroid') selectLayout('polaroid', 1, 'polaroid');
+      else if (ratio === 'square') selectLayout('square', 3, 'square');
+      else if (ratio === 'widescreen') selectLayout('2x6-horiz', 2, 'strip-horizontal-2x6');
+      else if (ratio === 'portrait-4x6') selectLayout('4x6-portrait', 4, 'postcard-portrait');
+      else selectLayout('4-cut', 4, 'strip-vertical');
+
+      startPhotoboothFlow('classic');
+    }
+
+    function resetPhotoboothFlow() {
+      stopCameraStream();
+      startPhotoboothFlow('classic');
+    }
+
+    function goToWorkflowStep(stepNum) {
+      state.currentStep = stepNum;
+      document.querySelectorAll('.workflow-step').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`workflow-step-${stepNum}`).classList.remove('hidden');
+
+      for (let i = 1; i <= 5; i++) {
+        const pill = document.getElementById(`step-pill-${i}`);
+        if (i === stepNum) {
+          pill.className = 'step-pill flex items-center gap-1.5 px-3 py-1 rounded-full bg-snapBlush text-snapPlum text-xs font-bold shadow-xs';
+        } else if (i < stepNum) {
+          pill.className = 'step-pill flex items-center gap-1.5 px-3 py-1 rounded-full bg-snapSoftPink text-snapPlum text-xs font-bold';
+        } else {
+          pill.className = 'step-pill flex items-center gap-1.5 px-3 py-1 rounded-full bg-snapCream text-snapPlum/60 text-xs font-bold';
+        }
+      }
+
+      if (stepNum === 2) {
+        initCameraOrCanvasFallback();
+      } else {
+        stopCameraStream();
+      }
+
+      if (stepNum === 4) {
+        renderEditorPreviewStrip();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ================= ZOOM-STYLE BACKGROUND FUNCTIONS ================= */
+    function setZoomBackground(type, value) {
+      state.zoomBgType = type;
+      state.zoomBgValue = value;
+      if (type === 'blur') {
+        showToast('Zoom Background: Blur enabled');
+      } else if (type === 'preset' || type === 'custom') {
+        showToast('Zoom Background applied successfully!');
+      } else {
+        showToast('Zoom Background: None');
+      }
+    }
+
+    function handleCustomBackgroundUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          setZoomBackground('custom', e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    let liveCanvasAnimationId = null;
+
+    async function initCameraOrCanvasFallback() {
+      const video = document.getElementById('webcam-video');
+      const liveCanvas = document.getElementById('webcam-live-canvas');
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: false });
+        state.cameraStream = stream;
+        video.srcObject = stream;
+        await video.play();
+        startLiveCanvasLoop();
+      } catch (err) {
+        console.warn("Camera fallback active.", err);
+        startSimulatedCanvasLoop();
+      }
+    }
+
+    function startLiveCanvasLoop() {
+      const video = document.getElementById('webcam-video');
+      const canvas = document.getElementById('webcam-live-canvas');
+      const ctx = canvas.getContext('2d');
+
+      function renderFrame() {
+        if (state.currentStep !== 2) return;
+
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 360;
+
+        // 1. Draw Background or Blur Effect
+        if (state.zoomBgType === 'blur') {
+          ctx.save();
+          ctx.filter = 'blur(15px)';
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          ctx.restore();
+          ctx.fillStyle = 'rgba(255, 244, 232, 0.35)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else if (state.zoomBgType === 'preset' || state.zoomBgType === 'custom') {
+          const bgImg = new Image();
+          bgImg.src = state.zoomBgValue;
+          if (bgImg.complete) {
+            ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+          } else {
+            ctx.fillStyle = '#FFF4E8';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
+        } else {
+          ctx.fillStyle = '#FFF4E8';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 2. Draw Camera Feed over background (simplified portrait cutout / center blend)
+        ctx.save();
+        ctx.globalAlpha = (state.zoomBgType !== 'none') ? 0.92 : 1.0;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
+
+        liveCanvasAnimationId = requestAnimationFrame(renderFrame);
+      }
+      renderFrame();
+    }
+
+    function startSimulatedCanvasLoop() {
+      const canvas = document.getElementById('webcam-live-canvas');
+      canvas.width = 640;
+      canvas.height = 360;
+      const ctx = canvas.getContext('2d');
+      let frame = 0;
+
+      function animateSimulatedCam() {
+        if (state.currentStep !== 2) return;
+
+        if (state.zoomBgType === 'blur') {
+          ctx.fillStyle = 'rgba(248, 220, 232, 0.6)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else {
+          ctx.fillStyle = '#FFF4E8';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        ctx.fillStyle = '#F5BFCF';
+        ctx.beginPath();
+        ctx.arc(320, 180, 75, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#57465D';
+        ctx.beginPath();
+        ctx.arc(300, 170, 8, 0, Math.PI * 2);
+        ctx.arc(340, 170, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(320, 185, 20, 0, Math.PI);
+        ctx.stroke();
+
+        ctx.font = '28px Quicksand';
+        ctx.fillText('✨', 220 + Math.sin(frame * 0.05) * 15, 100);
+        ctx.fillText('💖', 400 + Math.cos(frame * 0.05) * 15, 120);
+
+        frame++;
+        liveCanvasAnimationId = requestAnimationFrame(animateSimulatedCam);
+      }
+      animateSimulatedCam();
+    }
+
+    function stopCameraStream() {
+      if (state.cameraStream) {
+        state.cameraStream.getTracks().forEach(track => track.stop());
+        state.cameraStream = null;
+      }
+      if (liveCanvasAnimationId) {
+        cancelAnimationFrame(liveCanvasAnimationId);
+      }
+    }
+
+    function toggleCameraAccess() {
+      if (state.cameraStream) {
+        stopCameraStream();
+        showToast("Camera paused");
+      } else {
+        initCameraOrCanvasFallback();
+      }
+    }
+
+    function startCaptureSequence() {
+      if (state.capturedPhotos.length >= state.requiredShotsCount) {
+        showToast("All slots filled! Proceed to Frame & Editor.");
+        return;
+      }
+
+      const countdownSec = parseInt(document.getElementById('timer-select').value) || 5;
+      const overlay = document.getElementById('countdown-overlay');
+      const numElem = document.getElementById('countdown-number');
+      overlay.classList.remove('hidden');
+
+      let remaining = countdownSec;
+      numElem.textContent = remaining;
+
+      const timer = setInterval(() => {
+        remaining--;
+        if (remaining > 0) {
+          numElem.textContent = remaining;
+        } else {
+          clearInterval(timer);
+          overlay.classList.add('hidden');
+          captureSinglePhoto();
+        }
+      }, 1000);
+    }
+
+    function captureSinglePhoto() {
+      const liveCanvas = document.getElementById('webcam-live-canvas');
+      const canvas = document.createElement('canvas');
+      canvas.width = 400;
+      canvas.height = 300;
+      const ctx = canvas.getContext('2d');
+
+      ctx.drawImage(liveCanvas, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/png');
+      state.capturedPhotos.push(dataUrl);
+
+      showToast(`Shot ${state.capturedPhotos.length} of ${state.requiredShotsCount} captured!`, 'fa-camera');
+      renderCapturedThumbnails();
+    }
+
+    function retakePhoto(index) {
+      state.capturedPhotos.splice(index, 1);
+      renderCapturedThumbnails();
+      showToast(`Slot ${index + 1} cleared for retake`);
+    }
+
+    function renderCapturedThumbnails() {
+      const list = document.getElementById('captured-thumbnails-list');
+      const countBadge = document.getElementById('captured-count-badge');
+      const btnProceed = document.getElementById('btn-proceed-to-frame');
+
+      countBadge.textContent = `${state.capturedPhotos.length} / ${state.requiredShotsCount}`;
+
+      list.innerHTML = '';
+      for (let i = 0; i < state.requiredShotsCount; i++) {
+        const photo = state.capturedPhotos[i];
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between p-2 rounded-xl bg-snapCream border border-snapSoftPink';
+
+        if (photo) {
+          item.innerHTML = `
+            <div class="flex items-center gap-3">
+              <img src="${photo}" class="w-12 h-10 object-cover rounded-lg border border-snapBlush" />
+              <span class="text-xs font-bold text-snapPlum">Shot ${i + 1}</span>
+            </div>
+            <button onclick="retakePhoto(${i})" class="text-xs text-red-500 hover:text-red-700 font-bold px-2 py-1">Retake</button>
+          `;
+        } else {
+          item.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-10 bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-400 font-bold">${i + 1}</div>
+              <span class="text-xs text-snapPlum/50 italic">Empty Slot</span>
+            </div>
+            <span class="text-[10px] text-snapBlushDark font-semibold">Waiting</span>
+          `;
+        }
+        list.appendChild(item);
+      }
+
+      if (state.capturedPhotos.length >= state.requiredShotsCount) {
+        btnProceed.disabled = false;
+        btnProceed.className = 'w-full py-3 rounded-full bg-snapBlush hover:bg-snapBlushDark text-snapPlum font-bold text-sm shadow transition-all cursor-pointer';
+      } else {
+        btnProceed.disabled = true;
+        btnProceed.className = 'w-full py-3 rounded-full bg-gray-200 text-gray-400 font-bold text-sm transition-all cursor-not-allowed';
+      }
+    }
+
+    /* ================= FRAME STEP (NOW STEP 3) ================= */
+    function setFrameTheme(themeKey, bgHex, textHex, borderClass) {
+      state.frameColor = bgHex;
+      state.frameTextColor = textHex;
+      state.frameBorderClass = borderClass;
+      
+      const preview = document.getElementById('frame-live-preview');
+      preview.style.backgroundColor = bgHex;
+      preview.style.color = textHex;
+
+      if (themeKey === 'polaroid') state.footerTagline = '📸 INSTANT FILM • SNAP';
+      else if (themeKey === 'floral') state.footerTagline = '🌷 GARDEN BLOSSOM • MEMORIES';
+      else if (themeKey === 'wooden') state.footerTagline = '🪵 RUSTIC WOOD • FOREVER';
+      else if (themeKey === 'chalkboard') state.footerTagline = '🖤 CHALKBOARD • GOOD TIMES';
+      else if (themeKey === 'glamour') state.footerTagline = '✨ GLAMOUR • VIP MEMORIES';
+      else state.footerTagline = 'STUDIO SNAP • DIGITAL MEMORIES';
+
+      document.getElementById('preview-footer-tag').textContent = state.footerTagline;
+      renderLiveFrameSlotsPreview();
+      showToast(`Frame theme applied: ${themeKey.toUpperCase()}`);
+    }
+
+    function updateFrameHeader(text) {
+      state.frameHeader = text || 'MEMORIES FOREVER';
+      document.getElementById('preview-frame-header').textContent = state.frameHeader;
+    }
+
+    function renderLiveFrameSlotsPreview() {
+      const container = document.getElementById('preview-slots-container');
+      container.innerHTML = '';
+      for (let i = 0; i < state.requiredShotsCount; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'w-full h-8 bg-white/80 rounded-xl border border-black/10 flex items-center justify-center text-[10px] text-gray-500 font-bold shadow-xs';
+        slot.textContent = `Shot ${i + 1}`;
+        container.appendChild(slot);
+      }
+    }
+
+    /* ================= EDITOR STEP (NOW STEP 4) ================= */
+    function switchEditorTab(tabName) {
+      document.querySelectorAll('.editor-tab-btn').forEach(btn => {
+        btn.classList.remove('text-snapBlushDark', 'border-b-2', 'border-snapBlushDark');
+        btn.classList.add('text-snapPlum/60');
+      });
+      document.querySelectorAll('.editor-tab-content').forEach(c => c.classList.add('hidden'));
+
+      document.getElementById(`tab-btn-${tabName}`).classList.add('text-snapBlushDark', 'border-b-2', 'border-snapBlushDark');
+      document.getElementById(`tab-btn-${tabName}`).classList.remove('text-snapPlum/60');
+      document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+
+      if (tabName === 'layers') {
+        renderLayersManagerList();
+      }
+    }
+
+    function applyPhotoFilter(filterName) {
+      state.activeFilter = filterName;
+      renderEditorPreviewStrip();
+      showToast(`Filter applied: ${filterName.toUpperCase()}`);
+    }
+
+    function addStickerToCanvas(emojiStr) {
+      const sticker = {
+        id: Date.now(),
+        text: emojiStr,
+        x: 40 + Math.random() * 80,
+        y: 40 + Math.random() * 120,
+        size: 36
+      };
+      state.stickersOnCanvas.push(sticker);
+      renderDraggableStickers();
+      showToast(`Added 3D Emoji ${emojiStr}`);
+    }
+
+    function addTextToCanvas() {
+      const input = document.getElementById('canvas-text-input');
+      if (!input.value.trim()) return;
+
+      const sticker = {
+        id: Date.now(),
+        text: input.value.trim(),
+        x: 50,
+        y: 100,
+        size: 16,
+        isText: true
+      };
+      state.stickersOnCanvas.push(sticker);
+      input.value = '';
+      renderDraggableStickers();
+      showToast("Added custom text overlay");
+    }
+
+    function removeSticker(id) {
+      state.stickersOnCanvas = state.stickersOnCanvas.filter(s => s.id !== id);
+      renderDraggableStickers();
+      renderLayersManagerList();
+      showToast("Overlay cleared successfully");
+    }
+
+    function renderLayersManagerList() {
+      const container = document.getElementById('layers-list-container');
+      container.innerHTML = '';
+
+      if (state.stickersOnCanvas.length === 0) {
+        container.innerHTML = '<p class="text-xs text-snapPlum/50 italic text-center py-4">No active sticker overlays.</p>';
+        return;
+      }
+
+      state.stickersOnCanvas.forEach((stk, idx) => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between p-2 rounded-xl bg-snapCream border border-snapSoftPink text-xs';
+        item.innerHTML = `
+          <span class="font-bold text-snapPlum">Layer ${idx + 1}: ${stk.text}</span>
+          <button onclick="removeSticker(${stk.id})" class="px-2.5 py-1 bg-red-100 text-red-600 rounded-lg font-bold hover:bg-red-200">Delete</button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderDraggableStickers() {
+      const layer = document.getElementById('interactive-sticker-layer');
+      layer.innerHTML = '';
+
+      state.stickersOnCanvas.forEach(stk => {
+        const elem = document.createElement('div');
+        elem.className = 'sticker-element absolute cursor-move select-none font-bold';
+        elem.style.left = `${stk.x}px`;
+        elem.style.top = `${stk.y}px`;
+        elem.style.fontSize = `${stk.size}px`;
+        elem.textContent = stk.text;
+
+        let isDragging = false;
+        let startX, startY;
+
+        elem.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          startX = e.clientX - stk.x;
+          startY = e.clientY - stk.y;
+          e.stopPropagation();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+          stk.x = e.clientX - startX;
+          stk.y = e.clientY - startY;
+          elem.style.left = `${stk.x}px`;
+          elem.style.top = `${stk.y}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+          isDragging = false;
+        });
+
+        layer.appendChild(elem);
+      });
+    }
+
+    function renderEditorPreviewStrip() {
+      const wrapper = document.getElementById('editor-strip-wrapper');
+      const photoStack = document.getElementById('editor-photo-stack');
+      const headerStamp = document.getElementById('editor-header-stamp');
+      const footerTag = document.getElementById('editor-footer-tag');
+
+      wrapper.style.backgroundColor = state.frameColor;
+      wrapper.style.color = state.frameTextColor;
+      headerStamp.textContent = `✨ ${state.frameHeader} ✨`;
+      footerTag.textContent = state.footerTagline;
+
+      photoStack.innerHTML = '';
+      state.capturedPhotos.forEach((photoDataUrl, index) => {
+        const photoImg = document.createElement('img');
+        photoImg.src = photoDataUrl;
+        photoImg.className = `w-full h-24 object-cover rounded-xl border-2 border-white shadow-xs filter-${state.activeFilter}`;
+        photoStack.appendChild(photoImg);
+      });
+
+      renderDraggableStickers();
+    }
+
+    /* ================= STEP 5: ROUNDED FRAME EXPORT ================= */
+    function renderFinalExportStrip() {
+      const canvas = document.getElementById('final-export-canvas');
+      canvas.width = 300;
+      canvas.height = 120 + (state.capturedPhotos.length * 150);
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = state.frameColor;
+      ctx.beginPath();
+      ctx.roundRect(0, 0, canvas.width, canvas.height, 28);
+      ctx.fill();
+
+      ctx.fillStyle = state.frameTextColor;
+      ctx.font = 'bold 15px Quicksand';
+      ctx.textAlign = 'center';
+      ctx.fillText(`✨ ${state.frameHeader} ✨`, canvas.width / 2, 35);
+
+      let loadedCount = 0;
+      state.capturedPhotos.forEach((photoUrl, index) => {
+        const img = new Image();
+        img.src = photoUrl;
+        img.onload = () => {
+          const yPos = 50 + (index * 145);
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(20, yPos, 260, 135, 16);
+          ctx.clip();
+          ctx.drawImage(img, 20, yPos, 260, 135);
+          ctx.restore();
+
+          loadedCount++;
+          if (loadedCount === state.capturedPhotos.length) {
+            state.stickersOnCanvas.forEach(stk => {
+              ctx.font = stk.isText ? `bold ${stk.size}px Outfit` : `${stk.size}px serif`;
+              ctx.fillText(stk.text, stk.x, stk.y + 60);
+            });
+
+            ctx.fillStyle = state.frameTextColor;
+            ctx.font = 'bold 10px Quicksand';
+            ctx.fillText(state.footerTagline, canvas.width / 2, canvas.height - 20);
+          }
+        };
+      });
+    }
+
+    function downloadStripImage() {
+      const canvas = document.getElementById('final-export-canvas');
+      const link = document.createElement('a');
+      link.download = `StudioSnap-RoundedStrip-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('Downloading rounded high-res photo strip!', 'fa-download');
+    }
+
+    function saveToMyGallery() {
+      const canvas = document.getElementById('final-export-canvas');
+      const dataUrl = canvas.toDataURL('image/png');
+
+      state.galleryItems.unshift({
+        id: Date.now(),
+        date: new Date().toLocaleDateString(),
+        mode: state.currentBoothMode,
+        imageUrl: dataUrl
+      });
+
+      renderGallery();
+      showToast('Saved to My Gallery!', 'fa-bookmark');
+    }
+
+    function copyShareableLink() {
+      showToast('Photo strip share link copied to clipboard!');
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById('gallery-grid');
+      const emptyMsg = document.getElementById('empty-gallery-msg');
+
+      if (state.galleryItems.length === 0) {
+        emptyMsg.classList.remove('hidden');
+        return;
+      } else {
+        emptyMsg.classList.add('hidden');
+      }
+
+      grid.innerHTML = '';
+      state.galleryItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-4 rounded-3xl border border-snapSoftPink shadow-card flex flex-col items-center space-y-3';
+        card.innerHTML = `
+          <img src="${item.imageUrl}" class="w-full max-w-[180px] rounded-2xl shadow-xs border border-snapSoftPink" />
+          <div class="w-full flex justify-between items-center text-xs text-snapPlum/70 pt-2">
+            <span class="font-bold">${item.date}</span>
+            <span class="uppercase text-[10px] bg-snapSoftPink text-snapPlum font-bold px-2 py-0.5 rounded-full">${item.mode}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function upgradeToSnapPlus() {
+      state.isSnapPlus = true;
+      showToast('Welcome to Snap Plus Premium! All features unlocked.', 'fa-crown');
+    }
+
+    window.onload = function() {
+      navigateTo('home');
+    };
+  </script>
+
+</body>
+</html>
